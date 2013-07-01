@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 //initialize the connection
  mysql_init(&mysql);
 //set connection details
- connection = (&mysql,"localhost","root","topsecret","employees",0,0,0);
+ connection =mysql_real_connect (&mysql,"localhost","root","topsecret","employees",0,0,0);
   if(connection == NULL)
   {
    printf(mysql_error(&mysql));
@@ -23,11 +23,14 @@ int main(int argc, char **argv)
   }
 //check the query if there is an error the function will return a different value from 0
  state= mysql_query(connection, "SELECT * FROM employees");
- if(state != 0)
- {
+  if(state != 0)
+  {
    printf(mysql_error(connection));
    return 1;
- }
+  }
+//store the result
+ result = mysql_store_result(connection);
+ printf("ROWS: %d\n", mysql_num_rows(result));
 //close connection
  mysql_close(connection);
 }
