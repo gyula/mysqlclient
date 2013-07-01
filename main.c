@@ -21,7 +21,13 @@ int main(int argc, char **argv)
    printf(mysql_error(&mysql));
    return 1;
   }
-
+//check the query if there is an error the function will return a different value from 0
+ state= mysql_query(connection, "SELECT * FROM employees");
+ if(state != 0)
+ {
+   printf(mysql_error(connection));
+   return 1;
+ }
 //close connection
  mysql_close(connection);
 }
