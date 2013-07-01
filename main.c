@@ -21,4 +21,6 @@ int main(int argc, char **argv)
 	   printf(mysql_error(&mysql));
 	   return -1;
 	  }
+	
+	mysql_close(connection);
 }
