@@ -16,7 +16,9 @@ int main(int argc, char **argv)
 	mysql_init(&mysql);
 	//set connection details
 	connection = (&mysql,"localhost","root","topsecret","employees",0,0,0);
-	  if(connection == NULL);
+	  if(connection == NULL)
+	  {
 	   printf(mysql_error(&mysql));
-	return -1;
+	   return -1;
+	  }
 }
