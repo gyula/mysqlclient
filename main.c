@@ -12,6 +12,7 @@ int main(int argc, char **argv)
  MYSQL_ROW row;
  MYSQL *connection, mysql;
  int state;
+ struct timeval begin, end;
 
 //print out the installed MySQL client version
  printf("MySQL client version: %s\n", mysql_get_client_info());
@@ -26,6 +27,7 @@ int main(int argc, char **argv)
    return 1;
   }
 //check the query if there is an error the function will return a different value from 0
+ gettimeofday(&begin,0);
  state= mysql_query(connection, "SELECT emp_no, first_name, last_name FROM employees WHERE first_name = 'Patricia'");
   if(state != 0)
   {
@@ -39,6 +41,8 @@ int main(int argc, char **argv)
   printf(" %d  %s  %s\n",(row[0] ? row[0] : NULL), (row[1] ? row[1] : NULL), (row[2] ? row[2] : NULL));
  }
  printf("ROWS: %d\n", mysql_num_rows(result));
+ gettimeofday(&end,0);
+ printf("Qeury time:  %.3Lf msec\n", time_elapsed_msec(begin,end));
 //free the result
  mysql_free_result(result);
 //close connection
