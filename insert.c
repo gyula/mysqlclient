@@ -28,11 +28,11 @@ int main()
     return 1;
   }
 
-  char statement[100];
+  char statement[50];
   gettimeofday(&begin,0);
-  for(i=0; i < 100; i++)
+  for(i=0; i < 1000; i++)
   {
-      snprintf(statement,100,"INSERT INTO Testinsert VALUES('%d','log_msg');",i);
+      snprintf(statement,50,"INSERT INTO Testinsert VALUES('%d','log_msg');",i);
   //printf("%s",statement);
       mysql_query(connection, statement);
   } 
