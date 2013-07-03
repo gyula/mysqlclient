@@ -22,7 +22,7 @@ int main(int argc, char **argv)
    return 1;
   }
 //check the query if there is an error the function will return a different value from 0
- state= mysql_query(connection, "SELECT * FROM employees");
+ state= mysql_query(connection, "SELECT emp_no, first_name, last_name FROM employees WHERE first_name = 'Patricia'");
   if(state != 0)
   {
    printf(mysql_error(connection));
@@ -30,7 +30,13 @@ int main(int argc, char **argv)
   }
 //store the result
  result = mysql_store_result(connection);
+ while((row = mysql_fetch_row(result)) != NULL )
+ {
+  printf(" %d  %s  %s\n",(row[0] ? row[0] : NULL), (row[1] ? row[1] : NULL), (row[2] ? row[2] : NULL));
+ }
  printf("ROWS: %d\n", mysql_num_rows(result));
+//free the result
+ mysql_free_result(result);
 //close connection
  mysql_close(connection);
 }
