@@ -2,10 +2,17 @@
 #include <time.h>
 #include <mysql.h>
 
+long double time_elapsed_msec(struct timeval begin_time, struct timeval end_time)
+{
+  return ((end_time.tv_sec - begin_time.tv_sec)*1000000 + (end_time.tv_usec - begin_time.tv_usec))/1000;
+}
+
 int main()
 {
   MYSQL *connection, mysql;
+  struct timeval begin, end; 
   int i;
+
   //set the connection
   mysql_init(&mysql);
   connection = mysql_real_connect(&mysql, "localhost", "root", "topsecret", "test" ,0,0,0);
@@ -22,12 +29,15 @@ int main()
   }
 
   char statement[100];
+  gettimeofday(&begin,0);
   for(i=0; i < 100; i++)
   {
       snprintf(statement,100,"INSERT INTO Testinsert VALUES('%d','log_msg');",i);
   //printf("%s",statement);
       mysql_query(connection, statement);
   } 
+  gettimeofday(&end,0);
+  printf("Qeury time:  %.3Lf msec\n", time_elapsed_msec(begin,end));
  //close the connection
-      mysql_close(connection);
+  mysql_close(connection);
 }
