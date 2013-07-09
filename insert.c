@@ -22,7 +22,7 @@ int main()
     return 1;
   }
   //create table if not exsists
-  if(mysql_query(connection, "CREATE TABLE IF NOT EXISTS test.Testinsert(ID INT, MSG CHAR(15));"))
+  if(mysql_query(connection, "CREATE TABLE IF NOT EXISTS test.Testinsert(ID INT, MSG CHAR(15)) ENGINE=InnoDB;"))
   {
     printf(mysql_error(connection));
     return 1;
@@ -30,14 +30,24 @@ int main()
 
   char statement[50];
   gettimeofday(&begin,0);
-  for(i=0; i < 1000; i++)
+  if(mysql_query(connection, "Begin"))
+  {
+    printf(mysql_error(connection));
+    return 1;
+  }
+  for(i=0; i < 10000; i++)
   {
       snprintf(statement,50,"INSERT INTO Testinsert VALUES('%d','log_msg');",i);
   //printf("%s",statement);
       mysql_query(connection, statement);
   } 
+  if(mysql_query(connection, "COMMIT;"))
+  {
+    printf(mysql_error(connection));
+    return 1;
+  }
   gettimeofday(&end,0);
-  printf("Qeury time:  %.3Lf msec\n", time_elapsed_msec(begin,end));
+  printf("Query time:  %.3Lf msec\n", time_elapsed_msec(begin,end));
  //close the connection
   mysql_close(connection);
 }
