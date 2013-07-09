@@ -38,7 +38,7 @@ int main()
     return 1;
   }
 
-  if(mysql_query(connection, "BEGIN"))
+  if(mysql_query(connection, "SET autocommit=0;"))
   {
     printf(mysql_error(connection));
     return 1;
