@@ -13,16 +13,11 @@ int main()
   MYSQL *connection, mysql;
   struct timeval begin, end;
   int i, max, j;
-  char statement[4000];
-  char insert[] = "INSERT INTO Testinsert(ID,MSG) VALUES";
-  char id[10];
-  char msg[] = " ,'log_msg'";
-  char leftb[] = " (";
-  char rightb[] = ")";
-  char coma[] = ",";
-  char coma2[] = ";";
+  GString *statement = g_string_new(NULL);
+  GString *mymsg = g_string_new("log_msg");
 
-  max= 200;
+  g_string_append(statement, "INSERT INTO Testinsert VALUES");
+  max= 100000;
   //set the connection
   mysql_init(&mysql);
   connection = mysql_real_connect(&mysql, "localhost", "root", "topsecret", "test" ,0,0,0);
@@ -44,37 +39,27 @@ int main()
     return 1;
   }
   gettimeofday(&begin,0);
-  for( j = 0 ; j < 50; j++)
+  for( i = 0  ; i < max; i++)
   {
-    strcpy(statement, insert);
-
-   for( i = 0 ; i < max ; i++)
-   {
-    snprintf(id,sizeof id, "'%d'", i );
-    strcat(statement, leftb);
-    strcat(statement, id);
-    strcat(statement, msg);
-    strcat(statement, rightb);
-     if(i < max-1)
-     {
-       strcat(statement, coma);
-     }
-   }
-   strcat(statement, coma2);
-   // printf("%s\n", statement);
-   if(mysql_query(connection, statement))
-   {
-    printf(mysql_error(connection));
-    return 1;
-   }
-   if(mysql_query(connection, "COMMIT;"))
-   {
-    printf(mysql_error(connection));
-    return 1;
-   }
+    g_string_append(statement, g_strdup_printf("('%d','%s')",i,mymsg -> str));
+    if( i < max-1 )
+      {
+        g_string_append(statement, ",");
+      }
   }
+  g_string_append(statement, ";");
+  if(mysql_query(connection, statement -> str))
+    {
+      printf(mysql_error(connection));
+      return 1;
+    }
+  if(mysql_query(connection, "COMMIT;"))
+    {
+      printf(mysql_error(connection));
+      return 1;
+    }
   gettimeofday(&end,0);
-  printf("Qeury time:  %.3Lf msec\n", time_elapsed_msec(begin,end));
+  printf("Query time:  %.3Lf msec\n", time_elapsed_msec(begin,end));
  //close the connection
   mysql_close(connection);
 }
