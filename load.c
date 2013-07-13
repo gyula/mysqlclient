@@ -21,7 +21,7 @@ int main()
     return 1;
   }
   //create table if not exsists
-  if(mysql_query(connection, "CREATE TABLE IF NOT EXISTS test.Testload(ID INT, MSG CHAR(15));"))
+  if(mysql_query(connection, "CREATE TABLE IF NOT EXISTS test.Testload(ID INT, MSG CHAR(15)) ENGINE=InnoDB;"))
   {
     printf(mysql_error(connection));
     return 1;
