@@ -23,19 +23,16 @@ int main()
   connection = mysql_real_connect(&mysql, "localhost", "root", "topsecret", "test" ,0,0,0);
   if(connection == NULL)
   {
-    printf(mysql_error(&mysql));
-    return 1;
+    error_msg(connection);
   }
   //create table if not exsists
   if(mysql_query(connection, "CREATE TABLE IF NOT EXISTS test.Testload(ID INT, MSG CHAR(15)) ENGINE=InnoDB;"))
   {
-    printf(mysql_error(connection));
-    return 1;
+    error_msg(connection);
   }
   if(mysql_query(connection, "SET FOREIGN_KEY_CHECKS = 0;"))
   {
-     printf(mysql_error(&mysql));
-     return 1;
+     error_msg(connection);
   }
   if(mysql_query(connection, "SET UNIQUE_CHECKS = 0;"))
   {
@@ -55,8 +52,7 @@ int main()
   gettimeofday(&end,0);
   if(mysql_query(connection, "SET FOREIGN_KEY_CHECKS = 1;"))
   {
-     printf(mysql_error(&mysql));
-     return 1;
+     error_msg(connection);
   }
   if(mysql_query(connection, "SET UNIQUE_CHECKS = 1;"))
   {
@@ -70,7 +66,7 @@ int main()
   {
     error_msg(connection);
   }
-  printf("Qeury time:  %.3Lf msec\n", time_elapsed_msec(begin,end));
+  printf("Query time:  %.3Lf msec\n", time_elapsed_msec(begin,end));
  //close the connection
   mysql_close(connection);
 }
