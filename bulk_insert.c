@@ -41,7 +41,6 @@ int main()
   {
     error_msg(connection);
   }
-  gettimeofday(&begin,0);
   for( i = 0  ; i < max; i++)
   {
     g_string_append(statement, g_strdup_printf("('%d','%s')",i,mymsg -> str));
@@ -51,6 +50,7 @@ int main()
       }
   }
   g_string_append(statement, ";");
+  gettimeofday(&begin,0);
   if(mysql_query(connection, statement -> str))
     {
       error_msg(connection);
